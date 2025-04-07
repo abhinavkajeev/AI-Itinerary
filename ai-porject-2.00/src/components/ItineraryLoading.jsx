@@ -58,8 +58,8 @@ const ItineraryLoading = () => {
     const generateItinerary = async () => {
       try {
         // Option 1: If you're using a backend API endpoint
-        const response = await axios.post('http://ai-itinerary-1.vercel.app', formData);
-        const itinerary = response.data;
+        const response = await axios.post(import.meta.env.REACT_APP_API_URL, formData);
+                const itinerary = response.data;
         
         // Option 2: If you're using the OpenAI API directly from the frontend (not recommended for production)
         // This is just for demonstration purposes - in a real app, you'd make this call from your backend
