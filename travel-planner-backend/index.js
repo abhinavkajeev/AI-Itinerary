@@ -10,8 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/itinerary', require('./routes/itinerary'));
-
+app.use(cors({ origin: 'https://ai-itinerary-plum.vercel.app/' }));
 // Basic route
 app.get('/', (req, res) => {
   res.send('Travel Planner API is running');
