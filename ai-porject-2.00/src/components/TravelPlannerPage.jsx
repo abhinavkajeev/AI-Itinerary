@@ -471,37 +471,31 @@ const TravelPlannerPage = ({ onSubmit, isModal = false }) => {
     Start Date
   </label>
   <div className="relative">
-    <Calendar
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400"
-      size={18}
-    />
+    
     <input
       type="date"
       value={startDate}
       onChange={(e) => setStartDate(e.target.value)}
       min={new Date().toISOString().split("T")[0]} // Prevent past dates
       // Fix: Increase the left padding to prevent overlap
-      className="w-full pl-10 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
+      className="w-full pl-6 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
       required
     />
-  </div>
-</div>
-<div>
-  <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
-    End Date
-  </label>
-  <div className="relative">
-    <Calendar
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-400"
-      size={18}
-    />
-    <input
+      </div>
+        </div>
+         <div>
+           <label className=" text-gray-700 font-medium mb-2 text-sm md:text-base">
+               End Date
+           </label>
+         <div className="relative">
+         
+        <input
       type="date"
       value={endDate}
       onChange={(e) => setEndDate(e.target.value)}
       min={startDate || new Date().toISOString().split("T")[0]} // Prevent past dates
       // Fix: Increase the left padding to prevent overlap
-      className="w-full pl-10 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
+      className="w-full pl-6 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
       required
     />
   </div>
