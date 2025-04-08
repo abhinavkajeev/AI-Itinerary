@@ -5,8 +5,21 @@ import CLOUDS from 'vanta/dist/vanta.clouds.min';
 
 function Hero({ onPlanTripClick }) {
   const vantaRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   useEffect(() => {
+    // Adjust Vanta effect settings based on device size
     const vantaEffect = CLOUDS({
       el: vantaRef.current,
       THREE: THREE,
@@ -15,67 +28,88 @@ function Hero({ onPlanTripClick }) {
       gyroControls: false,
       minHeight: 200.0,
       minWidth: 200.0,
-      backgroundColor: 0x1a365d, // Deep blue background color
-      cloudColor: 0x3b82f6, // Blue cloud color
+      backgroundColor: 0x1a365d, 
+      cloudColor: 0x3b82f6, 
       cloudShadowColor: 0x000000,
-      speed: 1,
-      zoom: 0.8
+      speed: isMobile ? 0.7 : 1, // Slower on mobile
+      zoom: isMobile ? 1 : 0.8   // More zoomed in on mobile for better visibility
     });
     
     return () => {
       if (vantaEffect) vantaEffect.destroy();
     };
-  }, []);
+  }, [isMobile]);
 
   // Split headline and description into words for animation
   const headlineWords = "Your AI Travel Companion".split(" ");
   const descriptionWords = "Create personalized travel itineraries in seconds with our AI-powered platform.".split(" ");
   
   return (
-    <header ref={vantaRef} className="relative pt-20 pb-28 px-4 overflow-hidden h-screen">
-      <div className="container pt-50 mx-auto text-center relative z-10">
-      <h1 className="text-5xl md:text-6xl font-bold text-white flex flex-wrap justify-center gap-x-4 mb-6">
-  {headlineWords.map((word, index) => (
-    <motion.span
-      key={index}
-      className="inline-block"
-      transition={{ type: "spring", stiffness: 300 }}
+    <header 
+      ref={vantaRef} 
+      className="relative overflow-hidden h-screen flex items-center justify-center"
     >
-      {word}
-    </motion.span>
-  ))}
-</h1>
+      <div className="container mx-auto text-center relative z-10 px-4 py-12">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white flex flex-wrap justify-center gap-x-2 gap-y-1 mb-4 md:mb-6">
+            {headlineWords.map((word, index) => (
+              <motion.span
+                key={index}
+                className="inline-block"
+                initial={{ y: isMobile ? 20 : 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ 
+                  delay: index * 0.1,
+                  type: "spring", 
+                  stiffness: isMobile ? 200 : 300,
+                  damping: 10
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
 
-<p className="text-xl text-gray-200 max-w-2xl mx-auto mb-12 flex flex-wrap justify-center gap-x-2">
-  {descriptionWords.map((word, index) => (
-    <motion.span
-      key={index}
-      className="inline-block"
-      transition={{ type: "spring", stiffness: 400 }}
-    >
-      {word}
-    </motion.span>
-  ))}
-</p>
+          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-xs sm:max-w-md md:max-w-2xl mx-auto mb-8 md:mb-12 flex flex-wrap justify-center gap-x-1 gap-y-0.5">
+            {descriptionWords.map((word, index) => (
+              <motion.span
+                key={index}
+                className="inline-block"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ 
+                  delay: headlineWords.length * 0.1 + index * 0.05,
+                  duration: 0.3
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </p>
+        </motion.div>
         
         <motion.div
           className="inline-block relative"
           whileHover="hover"
+          whileTap="tap"
         >
-          {/* Colorful particles that appear on hover */}
+          {/* Mobile-friendly touch feedback */}
           <motion.div 
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0 }}
             variants={{
-              hover: {
-                opacity: 1,
-              }
+              hover: { opacity: 1 },
+              tap: { opacity: 1 }
             }}
           >
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-4 h-4 rounded-full"
+                className="absolute w-3 h-3 sm:w-4 sm:h-4 rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
@@ -93,6 +127,17 @@ function Hero({ onPlanTripClick }) {
                       repeatType: "loop", 
                       repeatDelay: Math.random() * 0.5
                     }
+                  },
+                  tap: {
+                    x: Math.random() * 100 - 50,
+                    y: Math.random() * 100 - 50,
+                    opacity: [0, 1, 0],
+                    scale: [0, 1.2, 0],
+                    transition: { 
+                      duration: 0.8 + Math.random() * 0.4,
+                      repeat: 1,
+                      repeatType: "reverse"
+                    }
                   }
                 }}
               />
@@ -100,10 +145,13 @@ function Hero({ onPlanTripClick }) {
           </motion.div>
 
           <motion.button 
-            className="relative bg-white text-indigo-600 px-10 py-4 rounded-xl text-lg font-medium shadow-lg z-10 overflow-hidden"
+            className="relative bg-white text-indigo-600 px-6 sm:px-8 md:px-10 py-3 md:py-4 rounded-xl text-base md:text-lg font-medium shadow-lg z-10 overflow-hidden"
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
+            transition={{ 
+              delay: descriptionWords.length * 0.05 + 0.3, 
+              duration: 0.4 
+            }}
             variants={{
               hover: { 
                 scale: 1.05,
@@ -112,6 +160,11 @@ function Hero({ onPlanTripClick }) {
                   duration: 0.3,
                   boxShadow: { duration: 0.2 }
                 }
+              },
+              tap: {
+                scale: 0.95,
+                boxShadow: "0 0 15px rgba(255, 61, 113, 0.8)",
+                transition: { duration: 0.1 }
               }
             }}
             onClick={onPlanTripClick}
@@ -135,16 +188,26 @@ function Hero({ onPlanTripClick }) {
                       ease: "linear"
                     }
                   }
+                },
+                tap: {
+                  opacity: 1,
+                  scale: 1.1,
+                  transition: { duration: 0.2 }
                 }
               }}
             />
             
             {/* Inner content with color changing background */}
-            <motion.span className="absolute inset-0.5 bg-white rounded-lg" 
+            <motion.span 
+              className="absolute inset-0.5 bg-white rounded-lg" 
               variants={{
                 hover: { 
-                  backgroundColor: "#FF6F61", // Bright hot pink background on hover
+                  backgroundColor: "#FF6F61",
                   transition: { duration: 0.2 }
+                },
+                tap: {
+                  backgroundColor: "#FF8F80",
+                  transition: { duration: 0.1 }
                 }
               }}
             />
@@ -154,9 +217,14 @@ function Hero({ onPlanTripClick }) {
               <motion.span
                 variants={{
                   hover: { 
-                    color: "#ffffff", // Bright white text on hover
+                    color: "#ffffff",
                     textShadow: "0 0 8px rgba(255, 255, 255, 0.5)",
                     transition: { duration: 0.2 }
+                  },
+                  tap: {
+                    color: "#ffffff",
+                    textShadow: "0 0 12px rgba(255, 255, 255, 0.7)",
+                    transition: { duration: 0.1 }
                   }
                 }}
               >
@@ -165,7 +233,7 @@ function Hero({ onPlanTripClick }) {
               <motion.span
                 variants={{
                   hover: {
-                    color: "#ffffff", // Bright white arrow on hover
+                    color: "#ffffff",
                     x: [0, 10, 0],
                     transition: {
                       color: { duration: 0.2 },
@@ -175,6 +243,12 @@ function Hero({ onPlanTripClick }) {
                         ease: "easeInOut"
                       }
                     }
+                  },
+                  tap: {
+                    color: "#ffffff",
+                    x: 15,
+                    scale: 1.2,
+                    transition: { duration: 0.2 }
                   }
                 }}
               >
@@ -183,6 +257,9 @@ function Hero({ onPlanTripClick }) {
             </motion.span>
           </motion.button>
         </motion.div>
+        
+        {/* Mobile-specific swipe indicator */}
+       
       </div>
     </header>
   );
