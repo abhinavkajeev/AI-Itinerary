@@ -480,7 +480,7 @@ const TravelPlannerPage = ({ onSubmit, isModal = false }) => {
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             min={new Date().toISOString().split("T")[0]} // Prevent past dates
-                            className="w-full pl-13 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
+                            className="w-70 pl-13 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
                             required
                           />
                         </div>
@@ -499,7 +499,7 @@ const TravelPlannerPage = ({ onSubmit, isModal = false }) => {
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                             min={startDate || new Date().toISOString().split("T")[0]} // Prevent past dates
-                            className="w-full pl-13 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
+                            className="w-70 pl-13 pr-3 py-3 text-base md:text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 shadow-sm hover:shadow"
                             required
                           />
                         </div>
