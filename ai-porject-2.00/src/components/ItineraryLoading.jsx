@@ -58,7 +58,7 @@ const ItineraryLoading = () => {
     const generateItinerary = async () => {
       try {
         // Option 1: If you're using a backend API endpoint
-        const response = await axios.post(import.meta.env.REACT_APP_API_URL, formData);
+        const response = await axios.post(import.meta.env.VITE_API_URL, formData);
                 const itinerary = response.data;
         
         // Option 2: If you're using the OpenAI API directly from the frontend (not recommended for production)
