@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: 'https://ai-itinerary-plum.vercel.app/' }));
+app.use(cors({ origin: 'https://ai-itinerary-plum.vercel.app' }));
 app.use(express.json());
 
 // Routes
